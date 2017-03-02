@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>zi-link test</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+
+    <link rel="import" href="../zi-link.html">
+  </head>
+  <body>
+    <test-fixture id="basic">
+      <template>
+        <zi-link></zi-link>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('zi-link', function() {
+        test('instantiating the element works', function() {
+          var element = fixture('basic');
+          assert.equal(element.is, 'zi-link');
+        });
+      });
+    </script>
+  </body>
+</html>

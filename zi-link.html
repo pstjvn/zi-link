@@ -1,0 +1,69 @@
+<link rel="import" href="../polymer/polymer.html">
+<!--
+Utility element that wraps the specific behavior of installing links in frames.
+
+@demo demo/index.html
+-->
+<dom-module id="zi-link">
+  <script>
+    Polymer({
+      is: 'zi-link',
+      properties: {
+        /** The href to load in the document as link tag. */
+        href: String,
+        /**
+         * The target Document. This is the document we will insert the link
+         * tags.
+         *
+         * @type {Document}
+         */
+        targetDocument: {
+          type: Object
+        },
+        /** Reference to the last active link tag. */
+        _linkTag: {
+          Object
+        }
+      },
+
+      /** @override */
+      observers: [
+        '_onChange(href, targetDocument)'
+      ],
+
+      /** @override */
+      ready: function() {
+        this._boundOnError = this._onError.bind(this);
+        this._boundOnLoad = this._onLoad.bind(this);
+      },
+
+      /**
+       * Handler for observer, reacts on changing the target document or the
+       * href to load.
+       *
+       * Will be called only when both are defined.
+       *
+       * @private
+       */
+      _onChange: function() {
+        if (this._linkTag) {
+          this._linkTag.removeEventListener('load', this._boundOnLoad);
+          this._linkTag.removeEventListener('error', this._boundOnError);
+          if (this._linkTag.parentNode) {
+            this._linkTag.parentNode.removeChild(this._linkTag);
+          }
+        }
+        this._linkTag = this.targetDocument.createElement('link');
+        this._linkTag.addEventListener('load', this._boundOnLoad);
+        this._linkTag.addEventListener('error', this._boundOnError);
+        this._linkTag.rel = 'stylesheet';
+        this._linkTag.href = this.href;
+        this.targetDocument.head.appendChild(this._linkTag);
+      },
+
+      _onLoad: function(e) { this.fire('load'); },
+
+      _onError: function(e) { this.fire('error', { message: e.message }); }
+    });
+  </script>
+</dom-module>
